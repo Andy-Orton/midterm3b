@@ -1,9 +1,16 @@
-
+from typing import Dict
+from pulp import *
 # runs dijkstras algorithm for single source once for each given node then returns the minimum travel time
 def two_friends_meet(graph, s, t):
     s_shortest = dijkstras(graph.copy(), s)
     t_shortest = dijkstras(graph.copy(), t)
-    return(min(s_shortest[node] + t_shortest[node] for node in graph))
+    minimum_cost = 9999999
+    middle_city = ''
+    for node in graph:
+        if s_shortest[node] + t_shortest[node] < minimum_cost:
+            minimum_cost = s_shortest[node] + t_shortest[node]
+            middle_city = node
+    return middle_city
 
 
 
@@ -36,12 +43,10 @@ def dijkstras(graph, source):
     return shortest_distances
 
 
-
-
 def test_two_friends():
     graph = {'a':{'b':7,'c':3},'b':{'c':1,'d':2},'c':{'b':4,'d':10,'e':2},'d':{'e':9},'e':{'d':10}}
-    assert two_friends_meet(graph, 'a', 'd') == 9
+    assert two_friends_meet(graph, 'a', 'd') == 'd'
 
 def test_two_friends2():
     graph = {'a':{'b': 3, 'c':1}, 'b':{'c':10}, 'c':{'a':1, 'b':10}}
-    assert two_friends_meet(graph, 'a', 'b') == 3
+    assert two_friends_meet(graph, 'a', 'b') == 'b'
